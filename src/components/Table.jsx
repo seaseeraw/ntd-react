@@ -1,9 +1,12 @@
 import React from 'react'
 
-export default function Table({taskList}) {
-    const entryList = taskList.filter((item) => item.type === "entry");
-    const badList = taskList.filter((item) => item.type === "bad");
-  return (
+export default function Table({taskList, switchTask,handleOnDelete}) {
+    const entryList = taskList.filter((item) => item.type === "entry") || [];
+    const badList = taskList.filter((item) => item.type === "bad") || [];
+    // const totalBadhr = badList.reduce((acc, i)=> acc + i.hr,0);
+    // const totalBadhr = {badList.length > 0 && badList.reduce((acc, i) => acc + i.hr)};
+
+    return (
     <div className="row mt-5">
     <div className="col-md ">
         <h3 className="text-center">Entry List</h3>
@@ -19,10 +22,10 @@ export default function Table({taskList}) {
                 <td>{item.task}</td>
                 <td>{item.hr}hr</td>
                 <td className="text-end">
-                  <button onclick="handleOnDelete('${item.id}')" className="btn btn-danger">
+                  <button onClick={()=>handleOnDelete(item.id)} className="btn btn-danger">
                     <i className="fa-solid fa-trash"></i>
                   </button>
-                  <button onclick="switchTask('${item.id}', 'bad')" className="btn btn-success">
+                  <button onClick={()=>switchTask(item.id, 'bad')} className="btn btn-success">
                     <i className="fa-solid fa-arrow-right"></i>
                   </button>
                 </td>
@@ -47,13 +50,13 @@ export default function Table({taskList}) {
                 <td>{i + 1}</td>
                 <td>{item.task}</td>
                 <td>{item.hr}hr</td>
-                <td class="text-end">
+                <td className="text-end">
                  
-                  <button onclick="switchTask('${item.id}', 'entry')" class="btn btn-warning">
-                    <i class="fa-solid fa-arrow-left"></i>
+                  <button onClick={()=>switchTask(item.id, 'entry')} className="btn btn-warning">
+                    <i className="fa-solid fa-arrow-left"></i>
                   </button>
-                  <button onclick="handleOnDelete('${item.id}')" class="btn btn-danger">
-                  <i class="fa-solid fa-trash"></i>
+                  <button onClick={()=>handleOnDelete(item.id)} className="btn btn-danger">
+                  <i className="fa-solid fa-trash"></i>
                 </button>
                 </td>
                 </tr>
@@ -62,7 +65,7 @@ export default function Table({taskList}) {
 
             </tbody>
           </table>
-          <div className="alert alert-success">You could have saved <span id="savedhr"></span>hr</div>
+          <div className="alert alert-success">You could have saved <span id="savedhr">{badList.reduce((acc, i) => acc + i.hr, 0)}</span>hr</div>
     </div>
     
   </div>

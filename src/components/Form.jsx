@@ -7,7 +7,7 @@ function Form({addTaskList}) {
 console.log(name,value);
 setForm({
     ...form,
-    [name]: value,
+    [name]:name === 'hr' ? +value :value,
 });
     };
     const handleOnSubmit = (e) => {

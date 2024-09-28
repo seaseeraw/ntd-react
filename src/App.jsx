@@ -3,8 +3,13 @@ import './App.css';
 import Form from './components/Form';
 import { useState } from 'react';
 import Table from './components/Table';
+const hrPerWek = 24 * 7;
 function App() {
   const [taskList, setTaskList]=useState([])
+  const ttlHr =taskList.reduce((acc,item)=>{
+    return acc + item.hr;
+  },0);
+
 const addTaskList = (taskObj) =>{
   // console.log(taskObj);
   const obj ={
@@ -13,10 +18,26 @@ id: randomIdGenerator(),
 type:"entry",
 };
 
+if(ttlHr + taskObj.hr > hrPerWek){
+  return alert("Hours exceeded");
+}
 
   setTaskList([...taskList,obj]);
 };
 console.log(taskList);
+
+const switchTask = (id, type) => {
+  
+  setTaskList(
+    taskList.map((item) => {
+    if (item.id === id) {
+      item.type = type;
+    }
+
+    return item;
+  })
+);
+};
 
 const randomIdGenerator = (lenght = 6) => {
   const str = "qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM1234567890";
@@ -31,6 +52,16 @@ const randomIdGenerator = (lenght = 6) => {
   return id;
 };
 
+const handleOnDelete = (id) => {
+  if (window.confirm("Are you sure, you want to delete this?")) {
+    
+   setTaskList(taskList.filter((item) => item.id !== id))
+  }
+};
+
+// const ttlHr =taskList.reduce((acc,item)=>{
+//   return acc + item.hr;
+// },0);
 
   return (
     <div className="wrapper pt-5">
@@ -42,9 +73,9 @@ const randomIdGenerator = (lenght = 6) => {
      <Form addTaskList={addTaskList}/>
      
      
-      <Table taskList={taskList}/>
+      <Table taskList={taskList} switchTask={switchTask} handleOnDelete={handleOnDelete}/>
 
-      <div className="alert alert-success">Total hour = <span id="totalhr">0</span>hrs</div>
+      <div className="alert alert-success">Total hour = <span id="totalhr">{ttlHr}</span>hrs</div>
      
 </div>
 </div>
